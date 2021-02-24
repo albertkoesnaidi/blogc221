@@ -1,0 +1,45 @@
+{% extends "posts/post_base.html" %}
+
+{% block content %}
+
+    <h1 class="posttitle loader">{{post.title}}</h1>
+    
+    <p class="postcontent">{{post.message|safe|linebreaksbr}}</p>
+
+    {% if user.is_authenticated %}
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            {{comment_form}}
+            <button class="btn btn-info" type="submit" >Add comment</button>
+        </div>
+    </form>
+    {% endif %}
+
+    <hr>
+    
+    <div class="container">
+        {% if comments %}
+        <strong class="text-secondary">{{ object.number_of_comments }} Comment{{ object.number_of_comments|pluralize }}</strong>
+        <hr>
+        <ul>
+            {% for comment in comments %}
+            <li>           
+            <div>
+                <span>
+                <strong class="text-info">{{ comment.author }} </strong>
+                <small class="text-muted">{{ comment.created_date }}</small>
+                </span>
+                <p>
+                {{ comment.text|safe }}
+                </p>
+            </div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+            <strong class="text-secondary">No comments yet...</strong>
+        {% endif %}
+    </div>
+
+{% endblock %}
